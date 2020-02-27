@@ -26,8 +26,8 @@ def  start_logger(log_file, log_level=logging.DEBUG):
     '''
     Starts a common format logger
     '''
-        logging.basicConfig(filename=log_file, level=log_level, format='%(levelname)s <--> %(asctime)s ->> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-        logging.info("Logger Started")
+    logging.basicConfig(filename=log_file, level=log_level, format='%(levelname)s <--> %(asctime)s ->> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+    logging.info("Logger Started")
 
 
 def error_print(*args, **kwargs):
@@ -78,5 +78,3 @@ def read_csv(file_name, delimiter=','):
         reader = csv.DictReader(tsv_file, delimiter=delimiter)
         for row in reader:
             yield (row, num_rows)
-
-start_logger("test.log")
