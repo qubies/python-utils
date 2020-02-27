@@ -17,9 +17,18 @@ class Timer:
     def __init__(self, name):
         self.time = time()
         self.name = name
+        self.__update__()
+
+    def __update__(self):
+        self.last=time()
 
     def elapsed(self):
         print(f"Time for {self.name}: {round(time()-self.time, 3)}s")
+        self.__update__()
+    
+    def since(self):
+        print(f"Time since last timer update for {self.name}: {round(time()-self.last, 3)}s")
+        self.__update__()
 
 
 def  start_logger(log_file, log_level=logging.DEBUG):
