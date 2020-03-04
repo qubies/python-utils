@@ -6,6 +6,10 @@ from time import time
 import csv
 from functools import wraps
 
+nltk_word_init = None
+nltk_sentence_init = None
+sentencepiece_init = False
+
 def print_banner(s, width=80, banner_token='-'):
     if len(s) > width:
         return s
@@ -32,7 +36,6 @@ def print_banner_completion_wrapper(s, width=80, banner_token='-'):
         return wrapper
     return wrap
 
-sentencepiece_init = False
 
 # taken from https://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string-in-python
 table = str.maketrans({key: None for key in string.punctuation})
@@ -118,7 +121,7 @@ def read_csv(file_name, delimiter=','):
         for row in reader:
             yield (row, num_rows)
 
-def word_tokenizer(sentence):
+def sentencepiece_tokenize(sentence):
     global sentencepiece_init
 
     if not sentencepiece_init:
@@ -127,5 +130,19 @@ def word_tokenizer(sentence):
         import myutils.sentencepiece as mysentencepiece
 
     return mysentencepiece.to_tokens(sentence)
+
+def nltk_tokenize_words(sentence):
+    if not nltk_word_init:
+        global word_tokenize
+        from nltk.tokenize import word_tokenize
+    return word_tokenize(sentence)
+
+def nltk_tokenize_sentences(text):
+    if not nltk_sentence_init:
+        global sent_tokenize
+        from nltk.tokenize import sent_tokenize
+    return sent_tokenize(text)
+
+
 
 
