@@ -6,9 +6,6 @@ from time import time
 import csv
 from functools import wraps
 
-import myutils.data
-
-
 def print_banner(s, width=80, banner_token='-'):
     if len(s) > width:
         return s
@@ -126,8 +123,9 @@ def word_tokenizer(sentence):
 
     if not sentencepiece_init:
         sentencepiece_init = True
-        from myutils.sentencepiece import to_tokens
+        global mysentencepiece
+        import myutils.sentencepiece as mysentencepiece
 
-    return to_tokens(sentence)
+    return mysentencepiece.to_tokens(sentence)
 
 
