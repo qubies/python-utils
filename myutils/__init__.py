@@ -4,6 +4,38 @@ import sys
 import string
 from time import time
 import csv
+from functools import wraps
+
+import myutils.data
+
+
+def print_banner(s, width=80, banner_token='-'):
+    if len(s) > width:
+        return s
+    rem = width-len(s)
+    rhs = rem//2
+    lhs = rem-rhs
+    if rhs > 0:
+        rhs_pad = " " + (rhs-1)*banner_token
+    else:
+        rhs_pad = ""
+    lhs_pad = (lhs-1)*banner_token + " "
+    print(lhs_pad + s + rhs_pad, file=sys.stderr)
+
+
+def print_banner_completion_wrapper(s, width=80, banner_token='-'):
+    def wrap(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            print_banner(s, width, banner_token)
+            result = func(*args, **kwargs)
+            print_banner("Done " + s, width, banner_token)
+            print(file=sys.stderr)
+            return result
+        return wrapper
+    return wrap
+
+sentencepiece_init = False
 
 # taken from https://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string-in-python
 table = str.maketrans({key: None for key in string.punctuation})
@@ -12,21 +44,22 @@ class Timer:
     '''
     A time class that marks event times for a specific named period.
     Init to begin timing
-    elapsed to get information
+    since_start to get time from init, also resets last
     '''
     def __init__(self, name):
-        self.time = time()
+        self.start = time()
         self.name = name
         self.__update__()
 
     def __update__(self):
         self.last=time()
 
-    def elapsed(self):
-        print(f"Time for {self.name}: {round(time()-self.time, 3)}s")
+    def since_start(self, reset_last=True):
+        print(f"Time for {self.name}: {round(time()-self.start, 3)}s")
+        if not reset_last: return
         self.__update__()
     
-    def since(self):
+    def since_last(self):
         print(f"Time since last timer update for {self.name}: {round(time()-self.last, 3)}s")
         self.__update__()
 
@@ -87,3 +120,14 @@ def read_csv(file_name, delimiter=','):
         reader = csv.DictReader(tsv_file, delimiter=delimiter)
         for row in reader:
             yield (row, num_rows)
+
+def word_tokenizer(sentence):
+    global sentencepiece_init
+
+    if not sentencepiece_init:
+        sentencepiece_init = True
+        from myutils.sentencepiece import to_tokens
+
+    return to_tokens(sentence)
+
+
