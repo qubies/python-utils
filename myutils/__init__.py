@@ -9,17 +9,7 @@ from functools import wraps
 nltk_word_init = None
 nltk_sentence_init = None
 sentencepiece_init = False
-def batcher(batch_size, pre, post=lambda x:x, pre_args=None, post_args=None):
-    if pre_args:
-        input_list = [pre(*pre_args) for _ in range(batch_size)]
-    else:
-        input_list = [pre() for _ in range(batch_size)]
-    if post_args:
-        return post_args(input_list, *post_args)
-    else:
-        return post_args(input_list)
 
-    for n in batch_size
 def print_banner(s, width=80, banner_token='-'):
     if len(s) > width:
         return s
