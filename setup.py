@@ -11,4 +11,4 @@ setup(
     author_email='tobias@renwick.tech',
     description='Some utility functions I reuse',
     packages=find_packages(),
-    install_requires=['sentencepiece', 'nltk'])
+    install_requires=['sentencepiece', 'nltk', 'tqdm'])
