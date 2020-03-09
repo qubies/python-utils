@@ -119,7 +119,7 @@ def read_csv(file_name, delimiter=','):
     with open(file_name, mode='r') as csv_file:
         reader = csv.DictReader(csv_file, delimiter=delimiter)
         for row in reader:
-            yield (row, num_rows)
+            yield row
 
 def sentencepiece_tokenize(sentence):
     global sentencepiece_init
