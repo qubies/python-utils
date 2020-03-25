@@ -24,6 +24,14 @@ def print_banner(s, width=80, banner_token='-'):
     print(lhs_pad + s + rhs_pad, file=sys.stderr)
 
 
+def print_variables(d, lined=False):
+    if lined:
+        for k,v in d.items():
+            print(f"{k}: '{v}'")
+    else:
+        print(d)
+
+
 def print_banner_completion_wrapper(s, width=80, banner_token='-'):
     def wrap(func):
         @wraps(func)
@@ -142,7 +150,3 @@ def nltk_tokenize_sentences(text):
         global sent_tokenize
         from nltk.tokenize import sent_tokenize
     return sent_tokenize(text)
-
-
-
-
