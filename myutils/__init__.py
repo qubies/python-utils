@@ -140,13 +140,20 @@ def sentencepiece_tokenize(sentence):
     return mysentencepiece.to_tokens(sentence)
 
 def nltk_tokenize_words(sentence):
+    global nltk_word_init
     if not nltk_word_init:
         global word_tokenize
+        nltk_word_init = True
         from nltk.tokenize import word_tokenize
     return word_tokenize(sentence)
 
 def nltk_tokenize_sentences(text):
+    global nltk_sentence_init
     if not nltk_sentence_init:
+        nltk_sentence_init = True
         global sent_tokenize
         from nltk.tokenize import sent_tokenize
     return sent_tokenize(text)
+
+if __name__ == "__main__":
+    print(sentencepiece_tokenize(input("Enter:")))
