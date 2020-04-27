@@ -17,14 +17,26 @@ link_re = re.compile(r"http\S+")
 
 
 def remove_links(s, token="<LINK>"):
+    """
+    remove http links
+    replace with token
+    WARN relies on space at end of link. Do not use for html.
+    """
     return link_re.sub(token, s)
 
 
 def get_links(s):
+    """
+    return a list of http links
+    WARN relies on space at end of link. Do not use for html.
+    """
     return link_re.findall(s)
 
 
 def print_banner(s, width=80, banner_token="-"):
+    """
+    pretty banner for cli tasks
+    """
     if len(s) > width:
         return s
     rem = width - len(s)
@@ -47,6 +59,10 @@ def print_variables(d, lined=False):
 
 
 def print_banner_completion_wrapper(s, width=80, banner_token="-"):
+    """
+    prints a banner and the beginning and end of some func
+    """
+
     def wrap(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -157,6 +173,9 @@ def read_csv(file_name, delimiter=","):
 
 
 def sentencepiece_tokenize(sentence):
+    """
+    bpe tokenizer
+    """
     global sentencepiece_init
 
     if not sentencepiece_init:
@@ -168,6 +187,10 @@ def sentencepiece_tokenize(sentence):
 
 
 def nltk_tokenize_words(sentence):
+    """
+    break a sentence into words
+    destructive
+    """
     global nltk_word_init
     if not nltk_word_init:
         global word_tokenize
@@ -181,6 +204,9 @@ def cosine_similarity(a, b):
 
 
 def nltk_tokenize_sentences(text):
+    """
+    break a paragraph into sentences
+    """
     global nltk_sentence_init
     if not nltk_sentence_init:
         nltk_sentence_init = True
@@ -190,6 +216,10 @@ def nltk_tokenize_sentences(text):
 
 
 def dict_match(pattern, d):
+    """
+    takes a pattern dict, and matches the pattern in d
+    return a new dict with only the pattern fields
+    """
     if isinstance(pattern, dict):
         return {
             key: dict_match(pattern[key], d[key] if isinstance(d, dict) else tuple())
@@ -202,6 +232,10 @@ def dict_match(pattern, d):
 
 
 class Media_Snarf:
+    """
+    processes line by line json files common to social media processing utils
+    """
+
     def __init__(self, file_name, fields={}):
         self.file = file_name
         self.fields = fields
