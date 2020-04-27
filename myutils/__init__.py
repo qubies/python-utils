@@ -8,6 +8,7 @@ from time import time
 import csv
 from functools import wraps
 import re
+import json
 
 nltk_word_init = None
 nltk_sentence_init = None
@@ -186,6 +187,44 @@ def nltk_tokenize_sentences(text):
         global sent_tokenize
         from nltk.tokenize import sent_tokenize
     return sent_tokenize(text)
+
+
+def dict_match(pattern, d):
+    if isinstance(pattern, dict):
+        return {
+            key: dict_match(pattern[key], d[key] if isinstance(d, dict) else tuple())
+            for key, value in pattern.items()
+        }
+    elif isinstance(d, dict):
+        return {k: v for k, v in d.items() if k in pattern}
+    else:
+        return d
+
+
+class Media_Snarf:
+    def __init__(self, file_name, fields={}):
+        self.file = file_name
+        self.fields = fields
+        self.generator = None
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.generator == None:
+            self.generator = self.generate()
+        d = self.generator.__next__()
+        if len(self.fields) == 0:
+            return d
+        return dict_match(self.fields, d)
+
+    def generate(self):
+        with open(self.file) as f:
+            for line in f:
+                yield json.loads(line)
+
+    def pretty(self, i):
+        return json.dumps(i, indent=4)
 
 
 if __name__ == "__main__":
