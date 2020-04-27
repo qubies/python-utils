@@ -7,10 +7,20 @@ import string
 from time import time
 import csv
 from functools import wraps
+import re
 
 nltk_word_init = None
 nltk_sentence_init = None
 sentencepiece_init = False
+link_re = re.compile(r"http\S+")
+
+
+def remove_links(s, token="<LINK>"):
+    return link_re.sub(token, s)
+
+
+def get_links(s):
+    return link_re.findall(s)
 
 
 def print_banner(s, width=80, banner_token="-"):
@@ -179,4 +189,4 @@ def nltk_tokenize_sentences(text):
 
 
 if __name__ == "__main__":
-    print(sentencepiece_tokenize(input("Enter:")))
+    print(get_links(input("Enter:")))
